@@ -1,13 +1,65 @@
-body {
+*,
+*::after,
+*::before {
+  padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
 }
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  background: fff;
+  font-family: "Poppins" sans-serif;
+  background: #eee;
+}
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+.app {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+  margin-top: 4rem;
+  gap: 3rem;
+  margin: 2rem 0;
+  text-align: center;
+  box-shadow: 0 0 15px #403d39;
+  background: #fff;
+}
+.app h2 {
+  margin: 0.5rem 0;
+}
+.app p {
+  margin: 1rem 0;
+}
+.app div {
+  width: 100%;
+}
+.app div input {
+  width: 100%;
+  min-height: 3em;
+  gap: 2rem;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 2px solid #aaa;
+}
+.btn {
+  margin-top: 0.7rem;
+  padding: 0.7rem;
+  background: rgb(22, 111, 228);
+  color: #fff;
+  border-radius: 4px;
+  border: 2px solid transparent;
+}
+.btn-sec {
+  margin-top: 0.7rem;
+  padding: 0.7rem;
+  background: #000;
+  color: #fff;
+  border-radius: 4px;
+  width: 100%;
 }
