@@ -12,8 +12,11 @@ datasource db {
 
 model User {
     id Int @default(autoincrement()) @id
+    created_at DateTime @default(now()) @db.Timestamptz(6)
     email String @unique
     name String?
     hash String
     profile_picture String?
+
+    @@map("users")
 }
