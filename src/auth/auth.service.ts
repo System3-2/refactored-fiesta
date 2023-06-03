@@ -5,7 +5,8 @@ import { Prisma } from '@prisma/client';
 import * as argon from 'argon2';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LoginDto, SignupDto } from './dto';
-
+import { S3 } from 'aws-sdk';
+import { v4 as uuid } from 'uuid'
 
 type User = {
   name: string;
@@ -75,5 +76,24 @@ export class AuthService {
       data,
       message
     }
+  }
+
+  async upload(dataBuffer: Buffer, filename: string) {
+    const s3 = new S3()
+    // const uploadResult = await s3.upload({
+    //   Bucket: this.config.get('AWS_BUCKET_NAME'),
+    //   Body: dataBuffer,
+    //   Key: `${uuid()} - ${filename}`
+    // })
+
+    const uploadResult = await s3.upload({
+      Bucket: this.config.get('AWS_BUCKET_NAME'),
+      Body: dataBuffer,
+      Key: `${uuid()}-${filename}`,
+    }).promise();
+
+    console.log(uploadResult)
+    return uploadResult
+
   }
 }

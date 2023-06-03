@@ -54,26 +54,34 @@ export class AuthController {
     return "Event emitting"
   }
 
+  // @Post('upload')
+  // @UseInterceptors(FileInterceptor('file', {
+  //   dest: './', limits: {
+  //     fileSize: 1024 * 1024, // 1MB
+  //     files: 5, // Maximum 5 files
+  //   },
+  //   fileFilter: (req, file, cb) => {
+  //     if (file.mimetype.startsWith('image/')) {
+  //       cb(null, true);
+  //     } else {
+  //       console.log('i dont know what\'s happening')
+  //       return
+  //     }
+  //   }
+  // },
+  // ))
+  // uploadFile(@UploadedFile() file: Express.Multer.File) {
+  //   console.log(file)
+  //   return 'file uploaded'
+  // }
+
+
   @Post('upload')
-  @UseInterceptors(FileInterceptor('file', {
-    dest: './', limits: {
-      fileSize: 1024 * 1024, // 1MB
-      files: 5, // Maximum 5 files
-    },
-    fileFilter: (req, file, cb) => {
-      if (file.mimetype.startsWith('image/')) {
-        cb(null, true);
-      } else {
-        console.log('i dont know what\'s happening')
-        return
-      }
-    }
-  },
-  ))
+  @UseInterceptors(FileInterceptor('file'))
   uploadFile(@UploadedFile() file: Express.Multer.File) {
-    console.log(file)
-    return 'file uploaded'
+    return this.authService.upload(file.buffer, file.originalname)
   }
+
 
   @Post('uploads')
   @UseInterceptors(FilesInterceptor('files',))
