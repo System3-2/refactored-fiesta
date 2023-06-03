@@ -76,7 +76,7 @@ export class AuthController {
   }
 
   @Post('uploads')
-  @UseInterceptors(FilesInterceptor('files'))
+  @UseInterceptors(FilesInterceptor('files',))
   uploadMultipleFiles(@UploadedFiles() files: Array<Express.Multer.File>) {
     console.log(files[0], 'file 1')
     console.log(files[1], 'file 2')
