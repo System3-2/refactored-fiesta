@@ -1,23 +1,34 @@
-import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-import * as argon from 'argon2'
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { LoginDto, SignupDto } from './dto';
-import { NotFoundError } from 'rxjs';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { JwtService } from '@nestjs/jwt';
 import { Prisma } from '@prisma/client';
+import * as argon from 'argon2';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { LoginDto, SignupDto } from './dto';
+
+
+type User = {
+  name: string;
+  email: string
+}
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService, private config: ConfigService) { }
+  constructor(private prisma: PrismaService, private config: ConfigService, private jwt: JwtService) { }
 
   async signup(signupDto: SignupDto) {
+    const hash = await argon.hash(signupDto.password)
     try {
       const user = await this.prisma.user.create({
         data: {
           email: signupDto.email,
           name: signupDto.name,
-          hash: signupDto.password
+          hash: hash,
+        },
+        select: {
+          email: true,
+          name: true,
+          id: true
         }
       })
 
@@ -39,8 +50,30 @@ export class AuthService {
       }
     })
 
-    if (!user) throw new NotFoundError("User does not exists")
+    if (!user) throw new NotFoundException("User does not exists")
 
-    if (loginDto.password !== user.hash) throw new ForbiddenException("bad credentials")
+    const pwMatches = argon.verify(user.hash, loginDto.password)
+
+    if (!pwMatches) throw new ForbiddenException("Bad credentials")
+
+    // return 'Login success'
+    const { email, name } = user
+
+    return this.signToken(user.id, { name, email }, 'Login successful')
+  }
+
+  async signToken(userId: number, data: User, message: string): Promise<{ access_token: string, data: User, message: string }> {
+
+    const payload = {
+      sub: userId,
+      data
+    }
+    const token = await this.jwt.signAsync(payload)
+
+    return {
+      access_token: token,
+      data,
+      message
+    }
   }
 }
