@@ -93,7 +93,7 @@ export class AuthService {
     const uploadResult = await s3.upload({
       Bucket: this.config.get('AWS_BUCKET_NAME'),
       Body: dataBuffer,
-      Key: `${uuid()}-${filename}`,
+      Key: `profile/profile-picture/${uuid()}-${filename}`,
     }).promise();
 
     console.log(uploadResult)

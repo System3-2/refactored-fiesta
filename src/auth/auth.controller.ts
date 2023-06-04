@@ -1,14 +1,12 @@
 import { Body, Controller, Post, HttpCode, HttpStatus, Get, UseGuards, Request, UploadedFile, UseInterceptors, UploadedFiles, StreamableFile, Res } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { LoginDto, SignupDto } from './dto';
 import { JwtGuard } from './guard';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { eventTypes } from 'src/utils';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { FileFieldsInterceptor, FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { ApiTags } from '@nestjs/swagger'
-import { limits } from 'argon2';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { ApiTags } from '@nestjs/swagger';
 import { createReadStream } from 'fs';
 import { join } from 'path';
 import type { Response } from 'express';
@@ -54,26 +52,26 @@ export class AuthController {
     return "Event emitting"
   }
 
-  // @Post('upload')
-  // @UseInterceptors(FileInterceptor('file', {
-  //   dest: './', limits: {
-  //     fileSize: 1024 * 1024, // 1MB
-  //     files: 5, // Maximum 5 files
-  //   },
-  //   fileFilter: (req, file, cb) => {
-  //     if (file.mimetype.startsWith('image/')) {
-  //       cb(null, true);
-  //     } else {
-  //       console.log('i dont know what\'s happening')
-  //       return
-  //     }
-  //   }
-  // },
-  // ))
-  // uploadFile(@UploadedFile() file: Express.Multer.File) {
-  //   console.log(file)
-  //   return 'file uploaded'
-  // }
+  @Post('upload-test')
+  @UseInterceptors(FileInterceptor('file', {
+    limits: {
+      fileSize: 1024 * 1024, // 1MB
+      files: 5, // Maximum 5 files
+    },
+    fileFilter: (req, file, cb) => {
+      if (file.mimetype.startsWith('image/')) {
+        cb(null, true);
+      } else {
+        console.log('i dont know what\'s happening')
+        return
+      }
+    }
+  },
+  ))
+  uploadFiletest(@UploadedFile() file: Express.Multer.File) {
+    console.log(file.buffer)
+    return file
+  }
 
 
   @Post('upload')
