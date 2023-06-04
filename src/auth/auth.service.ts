@@ -79,7 +79,11 @@ export class AuthService {
   }
 
   async upload(dataBuffer: Buffer, filename: string) {
-    const s3 = new S3()
+    const s3 = new S3({
+      accessKeyId: this.config.get('AWS_ACCESSKEYID'),
+      secretAccessKey: this.config.get('AWS_SECRETACCESSKEY')
+
+    })
     // const uploadResult = await s3.upload({
     //   Bucket: this.config.get('AWS_BUCKET_NAME'),
     //   Body: dataBuffer,
