@@ -6,6 +6,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler'
 import { APP_GUARD } from '@nestjs/core';
+import { ThrottleModule } from './throttle/throttle.module';
 
 @Module({
   imports: [
@@ -17,11 +18,12 @@ import { APP_GUARD } from '@nestjs/core';
       }
     ),
     ThrottlerModule.forRoot({
-      ttl: 60,
+      ttl: 30,
       limit: 2,
     }),
     EventEmitterModule.forRoot(),
-    PrismaModule
+    PrismaModule,
+    ThrottleModule
   ],
   controllers: [],
   providers: [
