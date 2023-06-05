@@ -10,8 +10,10 @@ import { ApiTags } from '@nestjs/swagger';
 import { createReadStream } from 'fs';
 import { join } from 'path';
 import type { Response } from 'express';
+import { Throttle } from '@nestjs/throttler'
 
 @ApiTags('Auth controller')
+@Throttle(60, 2)
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService, private event: EventEmitter2, private prisma: PrismaService) { }
@@ -54,7 +56,7 @@ export class AuthController {
 
   @Post('upload-test')
   @UseInterceptors(FileInterceptor('file', {
-    limits: {
+    dest: './', limits: {
       fileSize: 1024 * 1024, // 1MB
       files: 5, // Maximum 5 files
     },

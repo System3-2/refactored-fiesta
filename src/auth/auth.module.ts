@@ -4,6 +4,8 @@ import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { EventListener } from './EventListener.service';
 import * as dotenv from 'dotenv'
+import { ThrottlerGuard } from '@nestjs/throttler'
+import { APP_GUARD } from '@nestjs/core'
 dotenv.config()
 
 @Module({
@@ -14,7 +16,13 @@ dotenv.config()
       signOptions: { expiresIn: '1h' },
     })
   ],
-  providers: [AuthService, EventListener],
+  providers: [
+    AuthService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard
+    }
+  ],
   controllers: [AuthController]
 })
 export class AuthModule { }
